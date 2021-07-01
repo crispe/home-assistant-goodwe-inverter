@@ -1065,6 +1065,28 @@ class ES(Inverter):
             SensorKind.bat,
         ),
         Sensor(
+            "pbatteryc1",
+            0,
+            lambda data, _: abs(
+                round(_read_voltage(data, 10) * _read_current(data, 18))
+            )
+            * (1 if _read_byte(data, 30) == 3 else 0),
+            "W",
+            "Battery Power Charging",
+            SensorKind.bat,
+        ),
+        Sensor(
+            "pbatteryd1",
+            0,
+            lambda data, _: abs(
+                round(_read_voltage(data, 10) * _read_current(data, 18))
+            )
+            * (1 if _read_byte(data, 30) == 2 else 0),
+            "W",
+            "Battery Power Discharging",
+            SensorKind.bat,
+        ),
+        Sensor(
             "battery_charge_limit",
             20,
             _read_bytes2,
@@ -1123,6 +1145,24 @@ class ES(Inverter):
             * (-1 if _read_byte(data, 80) == 2 else 1),
             "W",
             "On-grid Export Power",
+            SensorKind.ac,
+        ),
+        Sensor(
+            "pgride",
+            38,
+            lambda data, _: abs(_read_power2(data, 38))
+            * (1 if _read_byte(data, 80) == 1 else 0),
+            "W",
+            "Export Power",
+            SensorKind.ac,
+        ),
+        Sensor(
+            "pgridi",
+            38,
+            lambda data, _: abs(_read_power2(data, 38))
+            * (1 if _read_byte(data, 80) == 2 else 0),
+            "W",
+            "Import Power",
             SensorKind.ac,
         ),
         Sensor("fgrid", 40, _read_freq, "Hz", "On-grid Frequency", SensorKind.ac),
